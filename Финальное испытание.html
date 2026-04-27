@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Станция правильных звуков | Финальное испытание</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b2f5c 0%, #0a2a4a 100%);
+            font-family: 'Segoe UI', 'Roboto', 'Nunito', system-ui, sans-serif;
+            padding: 32px 24px 56px;
+            color: #1e2a36;
+        }
+
+        .master-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #fefaf2;
+            border-radius: 36px 36px 28px 28px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+            border-top: 8px solid #e53e3e;
+            border-bottom: 6px solid #f5c542;
+        }
+
+        .header-rail {
+            background: #1e3a8a;
+            padding: 20px 32px 18px;
+            border-bottom: 4px solid #facc15;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-box h1 {
+            font-size: 2rem;
+            color: #ffecb3;
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #b45309;
+        }
+
+        .title-box p {
+            color: #fed7aa;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .badge-master {
+            background: #2c5282;
+            padding: 6px 18px;
+            border-radius: 40px;
+            color: #facc15;
+            font-weight: bold;
+            border-left: 3px solid #facc15;
+            border-right: 3px solid #facc15;
+        }
+
+        .theory-card {
+            background: #ffffff;
+            margin: 24px 28px;
+            padding: 16px 24px 24px;
+            border-radius: 48px;
+            box-shadow: 0 6px 0 #d1d5db;
+            border: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            background: #dc2626;
+            display: inline-block;
+            padding: 6px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            box-shadow: inset 0 -2px 0 #991b1b;
+        }
+
+        .sound-flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            justify-content: center;
+            margin: 20px 0 12px;
+        }
+
+        .sound-tile {
+            background: #eef2ff;
+            border-radius: 36px;
+            padding: 12px 18px;
+            width: 160px;
+            text-align: center;
+            border-left: 6px solid #3b82f6;
+            border-bottom: 3px solid #94a3b8;
+        }
+
+        .sound-tile h3 {
+            font-size: 2rem;
+            color: #1e40af;
+            font-family: monospace;
+        }
+
+        .sound-tile p {
+            font-weight: 700;
+            color: #2d3a4b;
+        }
+
+        .word-badge {
+            background: #fef9e3;
+            border-radius: 40px;
+            padding: 4px 12px;
+            display: inline-block;
+            margin: 4px 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .quiz-section {
+            background: #f8fafc;
+            margin: 28px;
+            border-radius: 56px;
+            padding: 20px 26px;
+            box-shadow: 0 8px 0 #cbd5e1;
+        }
+
+        .task-block {
+            background: white;
+            border-radius: 44px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            border: 1px solid #e2e3e8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Исправленный стиль заголовков: синий фон, белый текст */
+        .task-title {
+            background: #2563eb;
+            display: inline-block;
+            padding: 6px 26px;
+            border-radius: 40px;
+            font-weight: 800;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 18px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .answer-reveal {
+            background: #d9f99d;
+            margin-top: 16px;
+            padding: 12px 18px;
+            border-radius: 32px;
+            display: none;
+            border-left: 8px solid #16a34a;
+            font-weight: 600;
+            color: #14532d;
+            font-size: 1rem;
+        }
+
+        .show-answer-btn {
+            background: #2563eb;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 36px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.1s linear;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .show-answer-btn:hover {
+            background: #1d4ed8;
+            transform: scale(0.97);
+        }
+
+        /* Стили для сопоставления слова и звука */
+        .match-zone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 28px;
+            justify-content: space-between;
+            margin: 20px 0 10px;
+        }
+        .match-col {
+            flex: 1;
+            background: #fefce8;
+            border-radius: 48px;
+            padding: 18px;
+            border: 1px solid #fde047;
+        }
+        .match-word, .match-sound {
+            background: #ffffff;
+            margin: 12px 0;
+            padding: 12px 16px;
+            border-radius: 48px;
+            cursor: pointer;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.1s;
+            border: 2px solid #e2e8f0;
+            font-size: 1.2rem;
+        }
+        .match-word {
+            background: #eff6ff;
+        }
+        .match-sound {
+            background: #fef3c7;
+            font-family: monospace;
+            font-size: 1.3rem;
+        }
+        .selected-highlight {
+            background: #bfdbfe !important;
+            border: 2px solid #2563eb !important;
+            transform: scale(1.01);
+        }
+        .feedback-match {
+            background: #e6f7ec;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 28px;
+            font-weight: 500;
+            display: none;
+            border-left: 6px solid #2e7d32;
+        }
+        .global-btn {
+            background: #facc15;
+            color: #1e293b;
+            margin-top: 12px;
+            border: none;
+            font-weight: bold;
+        }
+        .tips-block {
+            background: #f1f5f9;
+            margin: 28px;
+            border-radius: 48px;
+            padding: 24px;
+            border-left: 12px solid #eab308;
+        }
+        .footer-note {
+            text-align: center;
+            padding: 18px;
+            font-weight: 500;
+            color: #334155;
+            border-top: 2px dashed #cbd5e1;
+            margin-top: 8px;
+        }
+        @media (max-width: 780px) {
+            .match-zone {
+                flex-direction: column;
+            }
+            .theory-card, .quiz-section {
+                margin: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="master-container">
+    <div class="header-rail">
+        <div class="title-box">
+            <h1>Читай и играй</h1>
+            <p>Английский для юных читателей | Станция правильных звуков</p>
+        </div>
+        <div class="badge-master">
+            Мистер Трейн • Финальное испытание
+        </div>
+    </div>
+
+    <!-- ТЕОРИЯ: КРАТКОЕ ПОВТОРЕНИЕ ЗВУКОВ -->
+    <div class="theory-card">
+        <div class="section-title">Карта путешествия</div>
+        <p style="margin-bottom: 12px; font-weight: 500;">Повтори звуки перед испытанием. Смотри на карточки и вспоминай, как они произносятся.</p>
+        <div class="sound-flex">
+            <div class="sound-tile"><h3>[p]</h3><p>pen, apple, cup</p><div class="word-badge">губы смыкаются, резкий выдох</div></div>
+            <div class="sound-tile"><h3>[b]</h3><p>book, rabbit, job</p><div class="word-badge">звонкий, горло дрожит</div></div>
+            <div class="sound-tile"><h3>[t]</h3><p>ten, little, cat</p><div class="word-badge">язык за верхними зубами</div></div>
+            <div class="sound-tile"><h3>[d]</h3><p>dog, ladder, bed</p><div class="word-badge">звонкий, язык стучит</div></div>
+            <div class="sound-tile"><h3>[aː]</h3><p>car, star, father</p><div class="word-badge">долгий, как гудок поезда</div></div>
+            <div class="sound-tile"><h3>[iː]</h3><p>see, sheep, green</p><div class="word-badge">улыбка, долгое «иии»</div></div>
+        </div>
+    </div>
+
+    <!-- БЛОК ЗАДАНИЙ -->
+    <div class="quiz-section">
+        <div class="section-title" style="background: #eab308; color:#1e293b;">Финальные испытания</div>
+
+        <!-- ЗАДАНИЕ 1: Какой звук лишний? -->
+        <div class="task-block">
+            <div class="task-title">Задание 1. Найди лишнее слово</div>
+            <p><strong>1)</strong> pen – apple – book – cup</p>
+            <button class="show-answer-btn" data-odd="1">Показать ответ</button>
+            <div id="odd1Answer" class="answer-reveal"></div>
+
+            <p style="margin: 16px 0 8px;"><strong>2)</strong> cat – car – ten – dog</p>
+            <button class="show-answer-btn" data-odd="2">Показать ответ</button>
+            <div id="odd2Answer" class="answer-reveal"></div>
+
+            <p style="margin: 16px 0 8px;"><strong>3)</strong> sheep – star – see – green</p>
+            <button class="show-answer-btn" data-odd="3">Показать ответ</button>
+            <div id="odd3Answer" class="answer-reveal"></div>
+        </div>
+
+        <!-- ЗАДАНИЕ 2: СОПОСТАВЛЕНИЕ СЛОВА СО ЗВУКОМ (транскрипция) -->
+        <div class="task-block">
+            <div class="task-title">Задание 2. Соедини слово и его первый звук</div>
+            <p>Нажми на слово, затем на значок звука (транскрипцию). Соедини правильно.</p>
+            <div class="match-zone">
+                <div class="match-col">
+                    <div class="match-word" data-enword="pen">pen</div>
+                    <div class="match-word" data-enword="book">book</div>
+                    <div class="match-word" data-enword="ten">ten</div>
+                    <div class="match-word" data-enword="dog">dog</div>
+                    <div class="match-word" data-enword="car">car</div>
+                    <div class="match-word" data-enword="sheep">sheep</div>
+                </div>
+                <div class="match-col">
+                    <div class="match-sound" data-snd="p">[p]</div>
+                    <div class="match-sound" data-snd="b">[b]</div>
+                    <div class="match-sound" data-snd="t">[t]</div>
+                    <div class="match-sound" data-snd="d">[d]</div>
+                    <div class="match-sound" data-snd="aː">[aː]</div>
+                    <div class="match-sound" data-snd="iː">[iː]</div>
+                </div>
+            </div>
+            <button id="showAllMatchesSounds" class="show-answer-btn global-btn">Показать все правильные пары</button>
+            <div id="soundMatchFeed" class="feedback-match"></div>
+        </div>
+
+        <!-- ЗАДАНИЕ 3: Выбери правильный звук -->
+        <div class="task-block">
+            <div class="task-title">Задание 3. Какой звук в слове?</div>
+            <p><strong>В слове «apple» первый звук:</strong> [a] или [p]?</p>
+            <button class="show-answer-btn" data-simple="1">Ответ</button>
+            <div id="simpleAns1" class="answer-reveal"></div>
+
+            <p><strong>В слове «sheep» какой гласный?</strong> [ɪ] или [iː]?</p>
+            <button class="show-answer-btn" data-simple="2">Ответ</button>
+            <div id="simpleAns2" class="answer-reveal"></div>
+
+            <p><strong>В слове «dog» первый звук звонкий или глухой?</strong> [d] (звонкий) или [t] (глухой)?</p>
+            <button class="show-answer-btn" data-simple="3">Ответ</button>
+            <div id="simpleAns3" class="answer-reveal"></div>
+        </div>
+
+        <!-- ЗАДАНИЕ 4: Найди пару с одинаковым начальным звуком -->
+        <div class="task-block">
+            <div class="task-title">Задание 4. Одинаковый первый звук</div>
+            <p>Где оба слова начинаются с одинакового звука?</p>
+            <ul style="margin-left: 24px; margin-top: 6px;">
+                <li>A) cat – cup</li>
+                <li>Б) sheep – star</li>
+                <li>В) pen – book</li>
+            </ul>
+            <button class="show-answer-btn" data-same="1">Ответ</button>
+            <div id="sameAnswer" class="answer-reveal"></div>
+        </div>
+
+        <!-- ЗАДАНИЕ 5: Верно или неверно? (без рассуждений) -->
+        <div class="task-block">
+            <div class="task-title">Задание 5. Верно или неверно?</div>
+            <p>«В слове car звук [aː] долгий, как гудок поезда».</p>
+            <button class="show-answer-btn" data-tf="1">Ответ</button>
+            <div id="tf1" class="answer-reveal"></div>
+
+            <p>«Звук [b] произносится без голоса, как [p]».</p>
+            <button class="show-answer-btn" data-tf="2">Ответ</button>
+            <div id="tf2" class="answer-reveal"></div>
+
+            <p>«В слове green первый звук [g]».</p>
+            <button class="show-answer-btn" data-tf="3">Ответ</button>
+            <div id="tf3" class="answer-reveal"></div>
+        </div>
+
+        <!-- ЗАДАНИЕ 6: Найди слово, которое заканчивается на другой звук -->
+        <div class="task-block">
+            <div class="task-title">Задание 6. Отличается последний звук</div>
+            <p>В какой строчке последнее слово отличается по конечному звуку?</p>
+            <ul style="margin-left: 24px;">
+                <li>1) cup – job – bed</li>
+                <li>2) cat – rabbit – star</li>
+                <li>3) pen – ten – green</li>
+            </ul>
+            <button class="show-answer-btn" data-ending="1">Ответ</button>
+            <div id="endingAnswer" class="answer-reveal"></div>
+        </div>
+    </div>
+
+    <!-- СОВЕТЫ ОТ МИСТЕРА ТРЕЙНА -->
+    <div class="tips-block">
+        <div class="section-title" style="background: #1e3a8a;">Советы от Мистера Трейна</div>
+        <ul style="margin-left: 24px; line-height: 1.6; font-weight: 500;">
+            <li>Повторяй звуки перед зеркалом 5 минут каждый день.</li>
+            <li>Играй в игру «Эхо»: взрослый говорит слово, ты повторяешь.</li>
+            <li>Следи за долготой: [aː] и [iː] нужно тянуть.</li>
+            <li>Не бойся ошибаться. Ты уже молодец!</li>
+        </ul>
+        <p style="margin-top: 16px;">Ты прошёл все станции и получаешь Диплом пассажира!</p>
+    </div>
+    <div class="footer-note">
+        © Станция правильных звуков | Курс «Читай и играй»
+    </div>
+</div>
+
+<script>
+    // ЗАДАНИЕ 1: лишнее слово (краткие ответы)
+    document.querySelectorAll('[data-odd]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const num = btn.getAttribute('data-odd');
+            let answer = '';
+            if(num === '1') answer = 'Лишнее слово: apple. Оно начинается с гласного звука, а остальные с согласных.';
+            else if(num === '2') answer = 'Лишнее слово: ten. У него звук [t], а у cat и car [k], у dog [d].';
+            else answer = 'Лишнее слово: green. Оно начинается со звука [g], а sheep, star, see — с [ʃ], [s], [s].';
+            const div = document.getElementById(`odd${num}Answer`);
+            div.style.display = 'block';
+            div.innerHTML = `✅ ${answer}`;
+        });
+    });
+
+    // ЗАДАНИЕ 2: интерактивное сопоставление слова и звука (транскрипция)
+    const wordItems = document.querySelectorAll('.match-word');
+    const soundItems = document.querySelectorAll('.match-sound');
+    let currentWord = null;
+    const feedDiv = document.getElementById('soundMatchFeed');
+    let matchedWordStatus = { pen: false, book: false, ten: false, dog: false, car: false, sheep: false };
+    let matchedCountSounds = 0;
+    const totalSoundMatches = 6;
+
+    function updateSoundMatchMessage(msg, isError = false) {
+        feedDiv.style.display = 'block';
+        feedDiv.style.background = isError ? '#ffe6e6' : '#dcfce7';
+        feedDiv.style.borderLeftColor = isError ? '#dc2626' : '#16a34a';
+        feedDiv.innerHTML = msg;
+    }
+
+    function resetWordHighlight() {
+        wordItems.forEach(w => w.classList.remove('selected-highlight'));
+    }
+
+    wordItems.forEach(word => {
+        word.addEventListener('click', () => {
+            if (currentWord === word) {
+                currentWord = null;
+                resetWordHighlight();
+                updateSoundMatchMessage('Выбор сброшен. Нажми на слово снова.', false);
+            } else {
+                resetWordHighlight();
+                currentWord = word;
+                word.classList.add('selected-highlight');
+                updateSoundMatchMessage(`Выбрано слово: ${word.getAttribute('data-enword')}. Теперь нажми на правильный звук (транскрипцию).`, false);
+            }
+        });
+    });
+
+    // правильные соответствия слово => звук
+    const correctSoundMap = {
+        pen: 'p',
+        book: 'b',
+        ten: 't',
+        dog: 'd',
+        car: 'aː',
+        sheep: 'iː'
+    };
+
+    soundItems.forEach(soundEl => {
+        soundEl.addEventListener('click', () => {
+            if (!currentWord) {
+                updateSoundMatchMessage('Сначала выбери слово (например, pen или book).', true);
+                return;
+            }
+            const wordKey = currentWord.getAttribute('data-enword');
+            const soundKey = soundEl.getAttribute('data-snd');
+            if (matchedWordStatus[wordKey]) {
+                updateSoundMatchMessage(`Слово ${wordKey} уже соединено! Выбери другое слово.`, true);
+                currentWord.classList.remove('selected-highlight');
+                currentWord = null;
+                return;
+            }
+            if (correctSoundMap[wordKey] === soundKey) {
+                matchedWordStatus[wordKey] = true;
+                matchedCountSounds++;
+                currentWord.style.background = '#c8e6c9';
+                currentWord.style.border = '2px solid #2e7d32';
+                soundEl.style.background = '#c8e6c9';
+                soundEl.style.border = '2px solid #2e7d32';
+                updateSoundMatchMessage(`Правильно! ${wordKey} начинается со звука ${soundEl.innerText}. Молодец!`, false);
+                currentWord.classList.remove('selected-highlight');
+                currentWord = null;
+                if (matchedCountSounds === totalSoundMatches) {
+                    updateSoundMatchMessage('Отлично! Ты соединил все слова со звуками. Получай билет!', false);
+                }
+            } else {
+                updateSoundMatchMessage(`Неверно. У слова ${wordKey} другой первый звук. Попробуй ещё раз.`, true);
+                currentWord.classList.remove('selected-highlight');
+                currentWord = null;
+            }
+        });
+    });
+
+    document.getElementById('showAllMatchesSounds').addEventListener('click', () => {
+        updateSoundMatchMessage('Правильные пары: pen → [p] , book → [b] , ten → [t] , dog → [d] , car → [aː] , sheep → [iː]', false);
+    });
+
+    // ЗАДАНИЕ 3: простые ответы
+    const simpleBtns = document.querySelectorAll('[data-simple]');
+    simpleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-simple');
+            let resp = '';
+            let divId = '';
+            if(id === '1') { resp = 'Правильно: [æ]. В слове apple первый звук гласный [æ].'; divId = 'simpleAns1'; }
+            else if(id === '2') { resp = 'Правильно: [iː]. В слове sheep долгий звук [iː].'; divId = 'simpleAns2'; }
+            else { resp = 'Правильно: [d] звонкий. Горло дрожит.'; divId = 'simpleAns3'; }
+            const ansDiv = document.getElementById(divId);
+            ansDiv.style.display = 'block';
+            ansDiv.innerHTML = `✅ ${resp}`;
+        });
+    });
+
+    // ЗАДАНИЕ 4: одинаковый первый звук
+    const sameBtn = document.querySelector('[data-same="1"]');
+    sameBtn.addEventListener('click', () => {
+        const div = document.getElementById('sameAnswer');
+        div.style.display = 'block';
+        div.innerHTML = '✅ Правильный ответ: А) cat и cup. Оба начинаются со звука [k].';
+    });
+
+    // ЗАДАНИЕ 5: верно / неверно (кратко)
+    const tfBtns = document.querySelectorAll('[data-tf]');
+    tfBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const num = btn.getAttribute('data-tf');
+            let text = '';
+            let divId = '';
+            if(num === '1') { text = 'Верно. В слове car звук [aː] долгий.'; divId = 'tf1'; }
+            else if(num === '2') { text = 'Неверно. Звук [b] произносится с голосом, он звонкий.'; divId = 'tf2'; }
+            else { text = 'Верно. green начинается со звука [g].'; divId = 'tf3'; }
+            const answerDiv = document.getElementById(divId);
+            answerDiv.style.display = 'block';
+            answerDiv.innerHTML = `✅ ${text}`;
+        });
+    });
+
+    // ЗАДАНИЕ 6: отличающийся последний звук
+    const endingBtn = document.querySelector('[data-ending="1"]');
+    endingBtn.addEventListener('click', () => {
+        const div = document.getElementById('endingAnswer');
+        div.style.display = 'block';
+        div.innerHTML = '✅ Ответ: строка 2 (cat – rabbit – star). У star последний звук [aː] (гласный), а у cat и rabbit [t].';
+    });
+</script>
+</body>
+</html>
